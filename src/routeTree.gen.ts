@@ -10,17 +10,23 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as CalendarioRouteImport } from './routes/calendario'
 import { Route as ClassificacaoRouteImport } from './routes/classificacao'
 import { Route as EquipasRouteImport } from './routes/equipas'
 import { Route as ResultadosRouteImport } from './routes/resultados'
+import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as NoticiasIndexRouteImport } from './routes/noticias.index'
 import { Route as NoticiasIdRouteImport } from './routes/noticias.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -48,6 +54,11 @@ const ResultadosRoute = ResultadosRouteImport.update({
   path: '/resultados',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const NoticiasIndexRoute = NoticiasIndexRouteImport.update({
   id: '/noticias/',
   path: '/noticias/',
@@ -66,6 +77,7 @@ export interface FileRoutesByFullPath {
   '/classificacao': typeof ClassificacaoRoute
   '/equipas': typeof EquipasRoute
   '/resultados': typeof ResultadosRoute
+  '/admin': typeof AuthenticatedAdminRoute
   '/noticias/$id': typeof NoticiasIdRoute
   '/noticias/': typeof NoticiasIndexRoute
 }
@@ -76,17 +88,20 @@ export interface FileRoutesByTo {
   '/classificacao': typeof ClassificacaoRoute
   '/equipas': typeof EquipasRoute
   '/resultados': typeof ResultadosRoute
+  '/admin': typeof AuthenticatedAdminRoute
   '/noticias/$id': typeof NoticiasIdRoute
   '/noticias': typeof NoticiasIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
   '/calendario': typeof CalendarioRoute
   '/classificacao': typeof ClassificacaoRoute
   '/equipas': typeof EquipasRoute
   '/resultados': typeof ResultadosRoute
+  '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/noticias/$id': typeof NoticiasIdRoute
   '/noticias/': typeof NoticiasIndexRoute
 }
@@ -99,6 +114,7 @@ export interface FileRouteTypes {
     | '/classificacao'
     | '/equipas'
     | '/resultados'
+    | '/admin'
     | '/noticias/$id'
     | '/noticias/'
   fileRoutesByTo: FileRoutesByTo
@@ -109,22 +125,26 @@ export interface FileRouteTypes {
     | '/classificacao'
     | '/equipas'
     | '/resultados'
+    | '/admin'
     | '/noticias/$id'
     | '/noticias'
   id:
     | '__root__'
     | '/'
+    | '/_authenticated'
     | '/auth'
     | '/calendario'
     | '/classificacao'
     | '/equipas'
     | '/resultados'
+    | '/_authenticated/admin'
     | '/noticias/$id'
     | '/noticias/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
   CalendarioRoute: typeof CalendarioRoute
   ClassificacaoRoute: typeof ClassificacaoRoute
@@ -141,6 +161,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth': {
@@ -178,6 +205,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ResultadosRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/admin': {
+      id: '/_authenticated/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AuthenticatedAdminRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/noticias/': {
       id: '/noticias/'
       path: '/noticias'
@@ -195,8 +229,20 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAdminRoute: typeof AuthenticatedAdminRoute
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAdminRoute: AuthenticatedAdminRoute,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
   CalendarioRoute: CalendarioRoute,
   ClassificacaoRoute: ClassificacaoRoute,
