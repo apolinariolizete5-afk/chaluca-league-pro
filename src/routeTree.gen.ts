@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as CalendarioRouteImport } from './routes/calendario'
+import { Route as ClassificacaoRouteImport } from './routes/classificacao'
 import { Route as EquipasRouteImport } from './routes/equipas'
 import { Route as ResultadosRouteImport } from './routes/resultados'
 
@@ -22,6 +23,11 @@ const IndexRoute = IndexRouteImport.update({
 const CalendarioRoute = CalendarioRouteImport.update({
   id: '/calendario',
   path: '/calendario',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ClassificacaoRoute = ClassificacaoRouteImport.update({
+  id: '/classificacao',
+  path: '/classificacao',
   getParentRoute: () => rootRouteImport,
 } as any)
 const EquipasRoute = EquipasRouteImport.update({
@@ -38,12 +44,14 @@ const ResultadosRoute = ResultadosRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/calendario': typeof CalendarioRoute
+  '/classificacao': typeof ClassificacaoRoute
   '/equipas': typeof EquipasRoute
   '/resultados': typeof ResultadosRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/calendario': typeof CalendarioRoute
+  '/classificacao': typeof ClassificacaoRoute
   '/equipas': typeof EquipasRoute
   '/resultados': typeof ResultadosRoute
 }
@@ -51,20 +59,28 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/calendario': typeof CalendarioRoute
+  '/classificacao': typeof ClassificacaoRoute
   '/equipas': typeof EquipasRoute
   '/resultados': typeof ResultadosRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/calendario' | '/equipas' | '/resultados'
+  fullPaths: '/' | '/calendario' | '/classificacao' | '/equipas' | '/resultados'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/calendario' | '/equipas' | '/resultados'
-  id: '__root__' | '/' | '/calendario' | '/equipas' | '/resultados'
+  to: '/' | '/calendario' | '/classificacao' | '/equipas' | '/resultados'
+  id:
+    | '__root__'
+    | '/'
+    | '/calendario'
+    | '/classificacao'
+    | '/equipas'
+    | '/resultados'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CalendarioRoute: typeof CalendarioRoute
+  ClassificacaoRoute: typeof ClassificacaoRoute
   EquipasRoute: typeof EquipasRoute
   ResultadosRoute: typeof ResultadosRoute
 }
@@ -83,6 +99,13 @@ declare module '@tanstack/react-router' {
       path: '/calendario'
       fullPath: '/calendario'
       preLoaderRoute: typeof CalendarioRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/classificacao': {
+      id: '/classificacao'
+      path: '/classificacao'
+      fullPath: '/classificacao'
+      preLoaderRoute: typeof ClassificacaoRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/equipas': {
@@ -105,6 +128,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CalendarioRoute: CalendarioRoute,
+  ClassificacaoRoute: ClassificacaoRoute,
   EquipasRoute: EquipasRoute,
   ResultadosRoute: ResultadosRoute,
 }
