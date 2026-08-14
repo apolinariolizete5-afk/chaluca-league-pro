@@ -19,6 +19,7 @@ import { Route as ResultadosRouteImport } from './routes/resultados'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as NoticiasIndexRouteImport } from './routes/noticias.index'
 import { Route as NoticiasIdRouteImport } from './routes/noticias.$id'
+import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -69,6 +70,11 @@ const NoticiasIdRoute = NoticiasIdRouteImport.update({
   path: '/noticias/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthenticatedAdminRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -77,9 +83,10 @@ export interface FileRoutesByFullPath {
   '/classificacao': typeof ClassificacaoRoute
   '/equipas': typeof EquipasRoute
   '/resultados': typeof ResultadosRoute
-  '/admin': typeof AuthenticatedAdminRoute
+  '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/noticias/$id': typeof NoticiasIdRoute
   '/noticias/': typeof NoticiasIndexRoute
+  '/admin/': typeof AuthenticatedAdminIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -88,9 +95,9 @@ export interface FileRoutesByTo {
   '/classificacao': typeof ClassificacaoRoute
   '/equipas': typeof EquipasRoute
   '/resultados': typeof ResultadosRoute
-  '/admin': typeof AuthenticatedAdminRoute
   '/noticias/$id': typeof NoticiasIdRoute
   '/noticias': typeof NoticiasIndexRoute
+  '/admin': typeof AuthenticatedAdminIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -101,9 +108,10 @@ export interface FileRoutesById {
   '/classificacao': typeof ClassificacaoRoute
   '/equipas': typeof EquipasRoute
   '/resultados': typeof ResultadosRoute
-  '/_authenticated/admin': typeof AuthenticatedAdminRoute
+  '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/noticias/$id': typeof NoticiasIdRoute
   '/noticias/': typeof NoticiasIndexRoute
+  '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -117,6 +125,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/noticias/$id'
     | '/noticias/'
+    | '/admin/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -125,9 +134,9 @@ export interface FileRouteTypes {
     | '/classificacao'
     | '/equipas'
     | '/resultados'
-    | '/admin'
     | '/noticias/$id'
     | '/noticias'
+    | '/admin'
   id:
     | '__root__'
     | '/'
@@ -140,6 +149,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin'
     | '/noticias/$id'
     | '/noticias/'
+    | '/_authenticated/admin/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -226,15 +236,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof NoticiasIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/admin/': {
+      id: '/_authenticated/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
   }
 }
 
+interface AuthenticatedAdminRouteChildren {
+  AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
+}
+
+const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
+  AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
+}
+
+const AuthenticatedAdminRouteWithChildren =
+  AuthenticatedAdminRoute._addFileChildren(AuthenticatedAdminRouteChildren)
+
 interface AuthenticatedRouteRouteChildren {
-  AuthenticatedAdminRoute: typeof AuthenticatedAdminRoute
+  AuthenticatedAdminRoute: typeof AuthenticatedAdminRouteWithChildren
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
-  AuthenticatedAdminRoute: AuthenticatedAdminRoute,
+  AuthenticatedAdminRoute: AuthenticatedAdminRouteWithChildren,
 }
 
 const AuthenticatedRouteRouteWithChildren =
