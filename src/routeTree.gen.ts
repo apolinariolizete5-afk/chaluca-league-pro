@@ -17,9 +17,15 @@ import { Route as ClassificacaoRouteImport } from './routes/classificacao'
 import { Route as EquipasRouteImport } from './routes/equipas'
 import { Route as ResultadosRouteImport } from './routes/resultados'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
+import { Route as ConviteTokenRouteImport } from './routes/convite.$token'
 import { Route as NoticiasIndexRouteImport } from './routes/noticias.index'
 import { Route as NoticiasIdRouteImport } from './routes/noticias.$id'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
+import { Route as AuthenticatedAdminAdministradoresRouteImport } from './routes/_authenticated/admin.administradores'
+import { Route as AuthenticatedAdminCalendarioRouteImport } from './routes/_authenticated/admin.calendario'
+import { Route as AuthenticatedAdminEquipasRouteImport } from './routes/_authenticated/admin.equipas'
+import { Route as AuthenticatedAdminPublicacoesRouteImport } from './routes/_authenticated/admin.publicacoes'
+import { Route as AuthenticatedAdminResultadosRouteImport } from './routes/_authenticated/admin.resultados'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -60,6 +66,11 @@ const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
   path: '/admin',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const ConviteTokenRoute = ConviteTokenRouteImport.update({
+  id: '/convite/$token',
+  path: '/convite/$token',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const NoticiasIndexRoute = NoticiasIndexRouteImport.update({
   id: '/noticias/',
   path: '/noticias/',
@@ -75,6 +86,36 @@ const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AuthenticatedAdminRoute,
 } as any)
+const AuthenticatedAdminAdministradoresRoute =
+  AuthenticatedAdminAdministradoresRouteImport.update({
+    id: '/administradores',
+    path: '/administradores',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminCalendarioRoute =
+  AuthenticatedAdminCalendarioRouteImport.update({
+    id: '/calendario',
+    path: '/calendario',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminEquipasRoute =
+  AuthenticatedAdminEquipasRouteImport.update({
+    id: '/equipas',
+    path: '/equipas',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminPublicacoesRoute =
+  AuthenticatedAdminPublicacoesRouteImport.update({
+    id: '/publicacoes',
+    path: '/publicacoes',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
+const AuthenticatedAdminResultadosRoute =
+  AuthenticatedAdminResultadosRouteImport.update({
+    id: '/resultados',
+    path: '/resultados',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -84,8 +125,14 @@ export interface FileRoutesByFullPath {
   '/equipas': typeof EquipasRoute
   '/resultados': typeof ResultadosRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
+  '/convite/$token': typeof ConviteTokenRoute
   '/noticias/$id': typeof NoticiasIdRoute
   '/noticias/': typeof NoticiasIndexRoute
+  '/admin/administradores': typeof AuthenticatedAdminAdministradoresRoute
+  '/admin/calendario': typeof AuthenticatedAdminCalendarioRoute
+  '/admin/equipas': typeof AuthenticatedAdminEquipasRoute
+  '/admin/publicacoes': typeof AuthenticatedAdminPublicacoesRoute
+  '/admin/resultados': typeof AuthenticatedAdminResultadosRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
 }
 export interface FileRoutesByTo {
@@ -95,8 +142,14 @@ export interface FileRoutesByTo {
   '/classificacao': typeof ClassificacaoRoute
   '/equipas': typeof EquipasRoute
   '/resultados': typeof ResultadosRoute
+  '/convite/$token': typeof ConviteTokenRoute
   '/noticias/$id': typeof NoticiasIdRoute
   '/noticias': typeof NoticiasIndexRoute
+  '/admin/administradores': typeof AuthenticatedAdminAdministradoresRoute
+  '/admin/calendario': typeof AuthenticatedAdminCalendarioRoute
+  '/admin/equipas': typeof AuthenticatedAdminEquipasRoute
+  '/admin/publicacoes': typeof AuthenticatedAdminPublicacoesRoute
+  '/admin/resultados': typeof AuthenticatedAdminResultadosRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
 }
 export interface FileRoutesById {
@@ -109,8 +162,14 @@ export interface FileRoutesById {
   '/equipas': typeof EquipasRoute
   '/resultados': typeof ResultadosRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
+  '/convite/$token': typeof ConviteTokenRoute
   '/noticias/$id': typeof NoticiasIdRoute
   '/noticias/': typeof NoticiasIndexRoute
+  '/_authenticated/admin/administradores': typeof AuthenticatedAdminAdministradoresRoute
+  '/_authenticated/admin/calendario': typeof AuthenticatedAdminCalendarioRoute
+  '/_authenticated/admin/equipas': typeof AuthenticatedAdminEquipasRoute
+  '/_authenticated/admin/publicacoes': typeof AuthenticatedAdminPublicacoesRoute
+  '/_authenticated/admin/resultados': typeof AuthenticatedAdminResultadosRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
 }
 export interface FileRouteTypes {
@@ -123,8 +182,14 @@ export interface FileRouteTypes {
     | '/equipas'
     | '/resultados'
     | '/admin'
+    | '/convite/$token'
     | '/noticias/$id'
     | '/noticias/'
+    | '/admin/administradores'
+    | '/admin/calendario'
+    | '/admin/equipas'
+    | '/admin/publicacoes'
+    | '/admin/resultados'
     | '/admin/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -134,8 +199,14 @@ export interface FileRouteTypes {
     | '/classificacao'
     | '/equipas'
     | '/resultados'
+    | '/convite/$token'
     | '/noticias/$id'
     | '/noticias'
+    | '/admin/administradores'
+    | '/admin/calendario'
+    | '/admin/equipas'
+    | '/admin/publicacoes'
+    | '/admin/resultados'
     | '/admin'
   id:
     | '__root__'
@@ -147,8 +218,14 @@ export interface FileRouteTypes {
     | '/equipas'
     | '/resultados'
     | '/_authenticated/admin'
+    | '/convite/$token'
     | '/noticias/$id'
     | '/noticias/'
+    | '/_authenticated/admin/administradores'
+    | '/_authenticated/admin/calendario'
+    | '/_authenticated/admin/equipas'
+    | '/_authenticated/admin/publicacoes'
+    | '/_authenticated/admin/resultados'
     | '/_authenticated/admin/'
   fileRoutesById: FileRoutesById
 }
@@ -160,6 +237,7 @@ export interface RootRouteChildren {
   ClassificacaoRoute: typeof ClassificacaoRoute
   EquipasRoute: typeof EquipasRoute
   ResultadosRoute: typeof ResultadosRoute
+  ConviteTokenRoute: typeof ConviteTokenRoute
   NoticiasIdRoute: typeof NoticiasIdRoute
   NoticiasIndexRoute: typeof NoticiasIndexRoute
 }
@@ -222,6 +300,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/convite/$token': {
+      id: '/convite/$token'
+      path: '/convite/$token'
+      fullPath: '/convite/$token'
+      preLoaderRoute: typeof ConviteTokenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/noticias/': {
       id: '/noticias/'
       path: '/noticias'
@@ -243,14 +328,60 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/administradores': {
+      id: '/_authenticated/admin/administradores'
+      path: '/administradores'
+      fullPath: '/admin/administradores'
+      preLoaderRoute: typeof AuthenticatedAdminAdministradoresRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/calendario': {
+      id: '/_authenticated/admin/calendario'
+      path: '/calendario'
+      fullPath: '/admin/calendario'
+      preLoaderRoute: typeof AuthenticatedAdminCalendarioRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/equipas': {
+      id: '/_authenticated/admin/equipas'
+      path: '/equipas'
+      fullPath: '/admin/equipas'
+      preLoaderRoute: typeof AuthenticatedAdminEquipasRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/publicacoes': {
+      id: '/_authenticated/admin/publicacoes'
+      path: '/publicacoes'
+      fullPath: '/admin/publicacoes'
+      preLoaderRoute: typeof AuthenticatedAdminPublicacoesRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
+    '/_authenticated/admin/resultados': {
+      id: '/_authenticated/admin/resultados'
+      path: '/resultados'
+      fullPath: '/admin/resultados'
+      preLoaderRoute: typeof AuthenticatedAdminResultadosRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
   }
 }
 
 interface AuthenticatedAdminRouteChildren {
+  AuthenticatedAdminAdministradoresRoute: typeof AuthenticatedAdminAdministradoresRoute
+  AuthenticatedAdminCalendarioRoute: typeof AuthenticatedAdminCalendarioRoute
+  AuthenticatedAdminEquipasRoute: typeof AuthenticatedAdminEquipasRoute
+  AuthenticatedAdminPublicacoesRoute: typeof AuthenticatedAdminPublicacoesRoute
+  AuthenticatedAdminResultadosRoute: typeof AuthenticatedAdminResultadosRoute
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
 }
 
 const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
+  AuthenticatedAdminAdministradoresRoute:
+    AuthenticatedAdminAdministradoresRoute,
+  AuthenticatedAdminCalendarioRoute: AuthenticatedAdminCalendarioRoute,
+  AuthenticatedAdminEquipasRoute: AuthenticatedAdminEquipasRoute,
+  AuthenticatedAdminPublicacoesRoute: AuthenticatedAdminPublicacoesRoute,
+  AuthenticatedAdminResultadosRoute: AuthenticatedAdminResultadosRoute,
   AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
 }
 
@@ -276,6 +407,7 @@ const rootRouteChildren: RootRouteChildren = {
   ClassificacaoRoute: ClassificacaoRoute,
   EquipasRoute: EquipasRoute,
   ResultadosRoute: ResultadosRoute,
+  ConviteTokenRoute: ConviteTokenRoute,
   NoticiasIdRoute: NoticiasIdRoute,
   NoticiasIndexRoute: NoticiasIndexRoute,
 }
