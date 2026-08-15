@@ -22,6 +22,7 @@ import { Route as NoticiasIdRouteImport } from './routes/noticias.$id'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
 import { Route as AuthenticatedAdminCalendarioRouteImport } from './routes/_authenticated/admin.calendario'
 import { Route as AuthenticatedAdminEquipasRouteImport } from './routes/_authenticated/admin.equipas'
+import { Route as AuthenticatedAdminPublicacoesRouteImport } from './routes/_authenticated/admin.publicacoes'
 import { Route as AuthenticatedAdminResultadosRouteImport } from './routes/_authenticated/admin.resultados'
 
 const IndexRoute = IndexRouteImport.update({
@@ -90,6 +91,12 @@ const AuthenticatedAdminEquipasRoute =
     path: '/equipas',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminPublicacoesRoute =
+  AuthenticatedAdminPublicacoesRouteImport.update({
+    id: '/publicacoes',
+    path: '/publicacoes',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminResultadosRoute =
   AuthenticatedAdminResultadosRouteImport.update({
     id: '/resultados',
@@ -109,6 +116,7 @@ export interface FileRoutesByFullPath {
   '/noticias/': typeof NoticiasIndexRoute
   '/admin/calendario': typeof AuthenticatedAdminCalendarioRoute
   '/admin/equipas': typeof AuthenticatedAdminEquipasRoute
+  '/admin/publicacoes': typeof AuthenticatedAdminPublicacoesRoute
   '/admin/resultados': typeof AuthenticatedAdminResultadosRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
 }
@@ -123,6 +131,7 @@ export interface FileRoutesByTo {
   '/noticias': typeof NoticiasIndexRoute
   '/admin/calendario': typeof AuthenticatedAdminCalendarioRoute
   '/admin/equipas': typeof AuthenticatedAdminEquipasRoute
+  '/admin/publicacoes': typeof AuthenticatedAdminPublicacoesRoute
   '/admin/resultados': typeof AuthenticatedAdminResultadosRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
 }
@@ -140,6 +149,7 @@ export interface FileRoutesById {
   '/noticias/': typeof NoticiasIndexRoute
   '/_authenticated/admin/calendario': typeof AuthenticatedAdminCalendarioRoute
   '/_authenticated/admin/equipas': typeof AuthenticatedAdminEquipasRoute
+  '/_authenticated/admin/publicacoes': typeof AuthenticatedAdminPublicacoesRoute
   '/_authenticated/admin/resultados': typeof AuthenticatedAdminResultadosRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
 }
@@ -157,6 +167,7 @@ export interface FileRouteTypes {
     | '/noticias/'
     | '/admin/calendario'
     | '/admin/equipas'
+    | '/admin/publicacoes'
     | '/admin/resultados'
     | '/admin/'
   fileRoutesByTo: FileRoutesByTo
@@ -171,6 +182,7 @@ export interface FileRouteTypes {
     | '/noticias'
     | '/admin/calendario'
     | '/admin/equipas'
+    | '/admin/publicacoes'
     | '/admin/resultados'
     | '/admin'
   id:
@@ -187,6 +199,7 @@ export interface FileRouteTypes {
     | '/noticias/'
     | '/_authenticated/admin/calendario'
     | '/_authenticated/admin/equipas'
+    | '/_authenticated/admin/publicacoes'
     | '/_authenticated/admin/resultados'
     | '/_authenticated/admin/'
   fileRoutesById: FileRoutesById
@@ -296,6 +309,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminEquipasRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/publicacoes': {
+      id: '/_authenticated/admin/publicacoes'
+      path: '/publicacoes'
+      fullPath: '/admin/publicacoes'
+      preLoaderRoute: typeof AuthenticatedAdminPublicacoesRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/resultados': {
       id: '/_authenticated/admin/resultados'
       path: '/resultados'
@@ -309,6 +329,7 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedAdminRouteChildren {
   AuthenticatedAdminCalendarioRoute: typeof AuthenticatedAdminCalendarioRoute
   AuthenticatedAdminEquipasRoute: typeof AuthenticatedAdminEquipasRoute
+  AuthenticatedAdminPublicacoesRoute: typeof AuthenticatedAdminPublicacoesRoute
   AuthenticatedAdminResultadosRoute: typeof AuthenticatedAdminResultadosRoute
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
 }
@@ -316,6 +337,7 @@ interface AuthenticatedAdminRouteChildren {
 const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
   AuthenticatedAdminCalendarioRoute: AuthenticatedAdminCalendarioRoute,
   AuthenticatedAdminEquipasRoute: AuthenticatedAdminEquipasRoute,
+  AuthenticatedAdminPublicacoesRoute: AuthenticatedAdminPublicacoesRoute,
   AuthenticatedAdminResultadosRoute: AuthenticatedAdminResultadosRoute,
   AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
 }
