@@ -17,6 +17,7 @@ import { Route as ClassificacaoRouteImport } from './routes/classificacao'
 import { Route as EquipasRouteImport } from './routes/equipas'
 import { Route as ResultadosRouteImport } from './routes/resultados'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
+import { Route as ConviteTokenRouteImport } from './routes/convite.$token'
 import { Route as NoticiasIndexRouteImport } from './routes/noticias.index'
 import { Route as NoticiasIdRouteImport } from './routes/noticias.$id'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
@@ -64,6 +65,11 @@ const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
   id: '/admin',
   path: '/admin',
   getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const ConviteTokenRoute = ConviteTokenRouteImport.update({
+  id: '/convite/$token',
+  path: '/convite/$token',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const NoticiasIndexRoute = NoticiasIndexRouteImport.update({
   id: '/noticias/',
@@ -119,6 +125,7 @@ export interface FileRoutesByFullPath {
   '/equipas': typeof EquipasRoute
   '/resultados': typeof ResultadosRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
+  '/convite/$token': typeof ConviteTokenRoute
   '/noticias/$id': typeof NoticiasIdRoute
   '/noticias/': typeof NoticiasIndexRoute
   '/admin/administradores': typeof AuthenticatedAdminAdministradoresRoute
@@ -135,6 +142,7 @@ export interface FileRoutesByTo {
   '/classificacao': typeof ClassificacaoRoute
   '/equipas': typeof EquipasRoute
   '/resultados': typeof ResultadosRoute
+  '/convite/$token': typeof ConviteTokenRoute
   '/noticias/$id': typeof NoticiasIdRoute
   '/noticias': typeof NoticiasIndexRoute
   '/admin/administradores': typeof AuthenticatedAdminAdministradoresRoute
@@ -154,6 +162,7 @@ export interface FileRoutesById {
   '/equipas': typeof EquipasRoute
   '/resultados': typeof ResultadosRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
+  '/convite/$token': typeof ConviteTokenRoute
   '/noticias/$id': typeof NoticiasIdRoute
   '/noticias/': typeof NoticiasIndexRoute
   '/_authenticated/admin/administradores': typeof AuthenticatedAdminAdministradoresRoute
@@ -173,6 +182,7 @@ export interface FileRouteTypes {
     | '/equipas'
     | '/resultados'
     | '/admin'
+    | '/convite/$token'
     | '/noticias/$id'
     | '/noticias/'
     | '/admin/administradores'
@@ -189,6 +199,7 @@ export interface FileRouteTypes {
     | '/classificacao'
     | '/equipas'
     | '/resultados'
+    | '/convite/$token'
     | '/noticias/$id'
     | '/noticias'
     | '/admin/administradores'
@@ -207,6 +218,7 @@ export interface FileRouteTypes {
     | '/equipas'
     | '/resultados'
     | '/_authenticated/admin'
+    | '/convite/$token'
     | '/noticias/$id'
     | '/noticias/'
     | '/_authenticated/admin/administradores'
@@ -225,6 +237,7 @@ export interface RootRouteChildren {
   ClassificacaoRoute: typeof ClassificacaoRoute
   EquipasRoute: typeof EquipasRoute
   ResultadosRoute: typeof ResultadosRoute
+  ConviteTokenRoute: typeof ConviteTokenRoute
   NoticiasIdRoute: typeof NoticiasIdRoute
   NoticiasIndexRoute: typeof NoticiasIndexRoute
 }
@@ -286,6 +299,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin'
       preLoaderRoute: typeof AuthenticatedAdminRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/convite/$token': {
+      id: '/convite/$token'
+      path: '/convite/$token'
+      fullPath: '/convite/$token'
+      preLoaderRoute: typeof ConviteTokenRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/noticias/': {
       id: '/noticias/'
@@ -387,6 +407,7 @@ const rootRouteChildren: RootRouteChildren = {
   ClassificacaoRoute: ClassificacaoRoute,
   EquipasRoute: EquipasRoute,
   ResultadosRoute: ResultadosRoute,
+  ConviteTokenRoute: ConviteTokenRoute,
   NoticiasIdRoute: NoticiasIdRoute,
   NoticiasIndexRoute: NoticiasIndexRoute,
 }
