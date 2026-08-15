@@ -51,7 +51,7 @@ function ResultCard({ match, label }: { match: Match; label: string }) {
   const [home, setHome] = useState(match.home_score?.toString() ?? "");
   const [away, setAway] = useState(match.away_score?.toString() ?? "");
   const [scorer, setScorer] = useState("");
-  const [eventType, setEventType] = useState<"goal" | "yellow_card" | "red_card">("goal");
+  const [eventType, setEventType] = useState<"goal" | "yellow" | "red">("goal");
   const [minute, setMinute] = useState("");
   const [busy, setBusy] = useState(false);
 
@@ -179,8 +179,8 @@ function ResultCard({ match, label }: { match: Match; label: string }) {
           className="field-input"
         >
           <option value="goal">Golo</option>
-          <option value="yellow_card">Cartão amarelo</option>
-          <option value="red_card">Cartão vermelho</option>
+          <option value="yellow">Cartão amarelo</option>
+          <option value="red">Cartão vermelho</option>
         </select>
         <input
           type="number"
