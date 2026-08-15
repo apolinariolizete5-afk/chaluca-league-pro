@@ -166,7 +166,10 @@ function PlayersPanel({ team, onChange }: { team: Team; onChange: () => void }) 
       photo_url: photo,
       registered,
     });
-    if (error) return toast.error(error.message);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
     toast.success("Jogador adicionado");
     setName("");
     setShirt("");
@@ -177,13 +180,19 @@ function PlayersPanel({ team, onChange }: { team: Team; onChange: () => void }) 
 
   async function toggle(id: string, value: boolean) {
     const { error } = await supabase.from("players").update({ registered: value }).eq("id", id);
-    if (error) return toast.error(error.message);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
     onChange();
   }
 
   async function remove(id: string) {
     const { error } = await supabase.from("players").delete().eq("id", id);
-    if (error) return toast.error(error.message);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
     toast.success("Jogador removido");
     onChange();
   }
