@@ -20,6 +20,7 @@ import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/
 import { Route as NoticiasIndexRouteImport } from './routes/noticias.index'
 import { Route as NoticiasIdRouteImport } from './routes/noticias.$id'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
+import { Route as AuthenticatedAdminCalendarioRouteImport } from './routes/_authenticated/admin.calendario'
 import { Route as AuthenticatedAdminEquipasRouteImport } from './routes/_authenticated/admin.equipas'
 
 const IndexRoute = IndexRouteImport.update({
@@ -76,6 +77,12 @@ const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AuthenticatedAdminRoute,
 } as any)
+const AuthenticatedAdminCalendarioRoute =
+  AuthenticatedAdminCalendarioRouteImport.update({
+    id: '/calendario',
+    path: '/calendario',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminEquipasRoute =
   AuthenticatedAdminEquipasRouteImport.update({
     id: '/equipas',
@@ -93,6 +100,7 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/noticias/$id': typeof NoticiasIdRoute
   '/noticias/': typeof NoticiasIndexRoute
+  '/admin/calendario': typeof AuthenticatedAdminCalendarioRoute
   '/admin/equipas': typeof AuthenticatedAdminEquipasRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
 }
@@ -105,6 +113,7 @@ export interface FileRoutesByTo {
   '/resultados': typeof ResultadosRoute
   '/noticias/$id': typeof NoticiasIdRoute
   '/noticias': typeof NoticiasIndexRoute
+  '/admin/calendario': typeof AuthenticatedAdminCalendarioRoute
   '/admin/equipas': typeof AuthenticatedAdminEquipasRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
 }
@@ -120,6 +129,7 @@ export interface FileRoutesById {
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/noticias/$id': typeof NoticiasIdRoute
   '/noticias/': typeof NoticiasIndexRoute
+  '/_authenticated/admin/calendario': typeof AuthenticatedAdminCalendarioRoute
   '/_authenticated/admin/equipas': typeof AuthenticatedAdminEquipasRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
 }
@@ -135,6 +145,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/noticias/$id'
     | '/noticias/'
+    | '/admin/calendario'
     | '/admin/equipas'
     | '/admin/'
   fileRoutesByTo: FileRoutesByTo
@@ -147,6 +158,7 @@ export interface FileRouteTypes {
     | '/resultados'
     | '/noticias/$id'
     | '/noticias'
+    | '/admin/calendario'
     | '/admin/equipas'
     | '/admin'
   id:
@@ -161,6 +173,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin'
     | '/noticias/$id'
     | '/noticias/'
+    | '/_authenticated/admin/calendario'
     | '/_authenticated/admin/equipas'
     | '/_authenticated/admin/'
   fileRoutesById: FileRoutesById
@@ -256,6 +269,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/calendario': {
+      id: '/_authenticated/admin/calendario'
+      path: '/calendario'
+      fullPath: '/admin/calendario'
+      preLoaderRoute: typeof AuthenticatedAdminCalendarioRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/equipas': {
       id: '/_authenticated/admin/equipas'
       path: '/equipas'
@@ -267,11 +287,13 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedAdminRouteChildren {
+  AuthenticatedAdminCalendarioRoute: typeof AuthenticatedAdminCalendarioRoute
   AuthenticatedAdminEquipasRoute: typeof AuthenticatedAdminEquipasRoute
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
 }
 
 const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
+  AuthenticatedAdminCalendarioRoute: AuthenticatedAdminCalendarioRoute,
   AuthenticatedAdminEquipasRoute: AuthenticatedAdminEquipasRoute,
   AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
 }
