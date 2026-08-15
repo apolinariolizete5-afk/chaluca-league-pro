@@ -20,6 +20,7 @@ import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/
 import { Route as NoticiasIndexRouteImport } from './routes/noticias.index'
 import { Route as NoticiasIdRouteImport } from './routes/noticias.$id'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin.index'
+import { Route as AuthenticatedAdminAdministradoresRouteImport } from './routes/_authenticated/admin.administradores'
 import { Route as AuthenticatedAdminCalendarioRouteImport } from './routes/_authenticated/admin.calendario'
 import { Route as AuthenticatedAdminEquipasRouteImport } from './routes/_authenticated/admin.equipas'
 import { Route as AuthenticatedAdminPublicacoesRouteImport } from './routes/_authenticated/admin.publicacoes'
@@ -79,6 +80,12 @@ const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AuthenticatedAdminRoute,
 } as any)
+const AuthenticatedAdminAdministradoresRoute =
+  AuthenticatedAdminAdministradoresRouteImport.update({
+    id: '/administradores',
+    path: '/administradores',
+    getParentRoute: () => AuthenticatedAdminRoute,
+  } as any)
 const AuthenticatedAdminCalendarioRoute =
   AuthenticatedAdminCalendarioRouteImport.update({
     id: '/calendario',
@@ -114,6 +121,7 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/noticias/$id': typeof NoticiasIdRoute
   '/noticias/': typeof NoticiasIndexRoute
+  '/admin/administradores': typeof AuthenticatedAdminAdministradoresRoute
   '/admin/calendario': typeof AuthenticatedAdminCalendarioRoute
   '/admin/equipas': typeof AuthenticatedAdminEquipasRoute
   '/admin/publicacoes': typeof AuthenticatedAdminPublicacoesRoute
@@ -129,6 +137,7 @@ export interface FileRoutesByTo {
   '/resultados': typeof ResultadosRoute
   '/noticias/$id': typeof NoticiasIdRoute
   '/noticias': typeof NoticiasIndexRoute
+  '/admin/administradores': typeof AuthenticatedAdminAdministradoresRoute
   '/admin/calendario': typeof AuthenticatedAdminCalendarioRoute
   '/admin/equipas': typeof AuthenticatedAdminEquipasRoute
   '/admin/publicacoes': typeof AuthenticatedAdminPublicacoesRoute
@@ -147,6 +156,7 @@ export interface FileRoutesById {
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/noticias/$id': typeof NoticiasIdRoute
   '/noticias/': typeof NoticiasIndexRoute
+  '/_authenticated/admin/administradores': typeof AuthenticatedAdminAdministradoresRoute
   '/_authenticated/admin/calendario': typeof AuthenticatedAdminCalendarioRoute
   '/_authenticated/admin/equipas': typeof AuthenticatedAdminEquipasRoute
   '/_authenticated/admin/publicacoes': typeof AuthenticatedAdminPublicacoesRoute
@@ -165,6 +175,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/noticias/$id'
     | '/noticias/'
+    | '/admin/administradores'
     | '/admin/calendario'
     | '/admin/equipas'
     | '/admin/publicacoes'
@@ -180,6 +191,7 @@ export interface FileRouteTypes {
     | '/resultados'
     | '/noticias/$id'
     | '/noticias'
+    | '/admin/administradores'
     | '/admin/calendario'
     | '/admin/equipas'
     | '/admin/publicacoes'
@@ -197,6 +209,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin'
     | '/noticias/$id'
     | '/noticias/'
+    | '/_authenticated/admin/administradores'
     | '/_authenticated/admin/calendario'
     | '/_authenticated/admin/equipas'
     | '/_authenticated/admin/publicacoes'
@@ -295,6 +308,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/administradores': {
+      id: '/_authenticated/admin/administradores'
+      path: '/administradores'
+      fullPath: '/admin/administradores'
+      preLoaderRoute: typeof AuthenticatedAdminAdministradoresRouteImport
+      parentRoute: typeof AuthenticatedAdminRoute
+    }
     '/_authenticated/admin/calendario': {
       id: '/_authenticated/admin/calendario'
       path: '/calendario'
@@ -327,6 +347,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedAdminRouteChildren {
+  AuthenticatedAdminAdministradoresRoute: typeof AuthenticatedAdminAdministradoresRoute
   AuthenticatedAdminCalendarioRoute: typeof AuthenticatedAdminCalendarioRoute
   AuthenticatedAdminEquipasRoute: typeof AuthenticatedAdminEquipasRoute
   AuthenticatedAdminPublicacoesRoute: typeof AuthenticatedAdminPublicacoesRoute
@@ -335,6 +356,8 @@ interface AuthenticatedAdminRouteChildren {
 }
 
 const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
+  AuthenticatedAdminAdministradoresRoute:
+    AuthenticatedAdminAdministradoresRoute,
   AuthenticatedAdminCalendarioRoute: AuthenticatedAdminCalendarioRoute,
   AuthenticatedAdminEquipasRoute: AuthenticatedAdminEquipasRoute,
   AuthenticatedAdminPublicacoesRoute: AuthenticatedAdminPublicacoesRoute,
