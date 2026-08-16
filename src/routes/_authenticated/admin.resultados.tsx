@@ -206,6 +206,7 @@ function ResultCard({ match, label }: { match: Match; label: string }) {
           className="field-input"
         >
           <option value="goal">Golo</option>
+          <option value="assist">Assistência</option>
           <option value="yellow">Cartão amarelo</option>
           <option value="red">Cartão vermelho</option>
         </select>
@@ -224,6 +225,26 @@ function ResultCard({ match, label }: { match: Match; label: string }) {
           Registar
         </button>
       </div>
+
+      {(events ?? []).length > 0 && (
+        <ul className="mt-3 space-y-1 text-sm">
+          {(events ?? []).map((e) => (
+            <li key={e.id} className="flex items-center gap-2">
+              <span className="flex-1">
+                {EVENT_LABEL[e.type] ?? e.type} — {playerName(e.player_id)}
+                {e.minute != null ? ` (${e.minute}')` : ""}
+              </span>
+              <button
+                type="button"
+                onClick={() => void removeEvent(e.id, e.type)}
+                className="text-xs font-semibold text-destructive"
+              >
+                Remover
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }
