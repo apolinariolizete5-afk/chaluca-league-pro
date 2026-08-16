@@ -79,14 +79,15 @@ function Classificacao() {
         </div>
 
         <div>
-          <h2 className="text-lg font-bold">Melhores marcadores</h2>
-          <div className="mt-4 overflow-hidden rounded-lg border border-border bg-card">
-            <table className="w-full text-sm">
+          <h2 className="text-lg font-bold">Estatísticas de jogadores</h2>
+          <div className="mt-4 overflow-x-auto rounded-lg border border-border bg-card">
+            <table className="w-full min-w-[520px] text-sm">
               <thead className="bg-secondary text-xs text-muted-foreground">
                 <tr>
                   <th className="p-3 text-left">Jogador</th>
                   <th className="p-3 text-left">Equipa</th>
                   <th className="p-3">Golos</th>
+                  <th className="p-3">Assist.</th>
                   <th className="p-3">Amarelos</th>
                   <th className="p-3">Vermelhos</th>
                 </tr>
@@ -106,13 +107,14 @@ function Classificacao() {
                     </td>
                     <td className="p-3 text-muted-foreground">{s.team_name}</td>
                     <td className="p-3 text-center font-bold">{s.goals}</td>
+                    <td className="p-3 text-center font-bold">{s.assists}</td>
                     <td className="p-3 text-center">{s.yellows}</td>
                     <td className="p-3 text-center">{s.reds}</td>
                   </tr>
                 ))}
                 {(scorers ?? []).length === 0 && (
                   <tr>
-                    <td colSpan={5} className="p-6 text-center text-muted-foreground">
+                    <td colSpan={6} className="p-6 text-center text-muted-foreground">
                       Sem estatísticas ainda.
                     </td>
                   </tr>

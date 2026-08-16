@@ -397,6 +397,7 @@ export type Database = {
       }
       top_scorers: {
         Row: {
+          assists: number | null
           goals: number | null
           photo_url: string | null
           player_id: string | null
@@ -426,7 +427,7 @@ export type Database = {
     }
     Enums: {
       app_role: "admin"
-      event_type: "goal" | "yellow" | "red"
+      event_type: "goal" | "yellow" | "red" | "assist"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -555,7 +556,7 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin"],
-      event_type: ["goal", "yellow", "red"],
+      event_type: ["goal", "yellow", "red", "assist"],
     },
   },
 } as const

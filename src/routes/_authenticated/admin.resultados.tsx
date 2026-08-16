@@ -45,13 +45,41 @@ function AdminResults() {
   );
 }
 
+const EVENT_LABEL: Record<string, string> = {
+  goal: "Golo",
+  assist: "Assistência",
+  yellow: "Amarelo",
+  red: "Vermelho",
+};
+
+type MatchEvent = {
+  id: string;
+  player_id: string | null;
+  type: string;
+  minute: number | null;
+};
+
 function ResultCard({ match, label }: { match: Match; label: string }) {
   const qc = useQueryClient();
   const { data: players } = useQuery(playersQuery);
+  const { data: events } = useQuery({
+    queryKey: ["events", match.id],
+    queryFn: async (): Promise<MatchEvent[]> => {
+      const { data, error } = await supabase
+        .from("match_events")
+        .select("id,player_id,type,minute")
+        .eq("match_id", match.id)
+        .order("minute", { ascending: true });
+      if (error) throw error;
+      return (data ?? []) as MatchEvent[];
+    },
+  });
+  const playerName = (id: string | null) =>
+    (players ?? []).find((p) => p.id === id)?.name ?? "—";
   const [home, setHome] = useState(match.home_score?.toString() ?? "");
   const [away, setAway] = useState(match.away_score?.toString() ?? "");
   const [scorer, setScorer] = useState("");
-  const [eventType, setEventType] = useState<"goal" | "yellow" | "red">("goal");
+  const [eventType, setEventType] = useState<"goal" | "assist" | "yellow" | "red">("goal");
   const [minute, setMinute] = useState("");
   const [busy, setBusy] = useState(false);
 
@@ -98,6 +126,19 @@ function ResultCard({ match, label }: { match: Match; label: string }) {
     refresh();
   }
 
+  async function syncScoreFromGoals() {
+    const { data } = await supabase
+      .from("match_events")
+      .select("team_id,type")
+      .eq("match_id", match.id)
+      .eq("type", "goal");
+    const h = (data ?? []).filter((e) => e.team_id === match.home_team_id).length;
+    const a = (data ?? []).filter((e) => e.team_id === match.away_team_id).length;
+    await supabase.from("matches").update({ home_score: h, away_score: a }).eq("id", match.id);
+    setHome(String(h));
+    setAway(String(a));
+  }
+
   async function addEvent() {
     const player = squad.find((p) => p.id === scorer);
     if (!player) {
@@ -117,7 +158,21 @@ function ResultCard({ match, label }: { match: Match; label: string }) {
     }
     setScorer("");
     setMinute("");
+    if (eventType === "goal") await syncScoreFromGoals();
     toast.success("Lance registado");
+    void qc.invalidateQueries({ queryKey: ["events", match.id] });
+    refresh();
+  }
+
+  async function removeEvent(id: string, type: string) {
+    const { error } = await supabase.from("match_events").delete().eq("id", id);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
+    if (type === "goal") await syncScoreFromGoals();
+    toast.success("Lance removido");
+    void qc.invalidateQueries({ queryKey: ["events", match.id] });
     refresh();
   }
 
@@ -179,6 +234,7 @@ function ResultCard({ match, label }: { match: Match; label: string }) {
           className="field-input"
         >
           <option value="goal">Golo</option>
+          <option value="assist">Assistência</option>
           <option value="yellow">Cartão amarelo</option>
           <option value="red">Cartão vermelho</option>
         </select>
@@ -197,6 +253,26 @@ function ResultCard({ match, label }: { match: Match; label: string }) {
           Registar
         </button>
       </div>
+
+      {(events ?? []).length > 0 && (
+        <ul className="mt-3 space-y-1 text-sm">
+          {(events ?? []).map((e) => (
+            <li key={e.id} className="flex items-center gap-2">
+              <span className="flex-1">
+                {EVENT_LABEL[e.type] ?? e.type} — {playerName(e.player_id)}
+                {e.minute != null ? ` (${e.minute}')` : ""}
+              </span>
+              <button
+                type="button"
+                onClick={() => void removeEvent(e.id, e.type)}
+                className="text-xs font-semibold text-destructive"
+              >
+                Remover
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }

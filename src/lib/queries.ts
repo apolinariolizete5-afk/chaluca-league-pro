@@ -61,6 +61,7 @@ export type Scorer = {
   team_id: string;
   team_name: string;
   goals: number;
+  assists: number;
   yellows: number;
   reds: number;
 };
@@ -121,7 +122,9 @@ export const scorersQuery = queryOptions({
   queryFn: async (): Promise<Scorer[]> => {
     const { data, error } = await supabase.from("top_scorers").select("*");
     if (error) throw error;
-    return ((data ?? []) as Scorer[]).sort((a, b) => b.goals - a.goals);
+    return ((data ?? []) as Scorer[]).sort(
+      (a, b) => b.goals - a.goals || b.assists - a.assists,
+    );
   },
 });
 
