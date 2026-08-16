@@ -397,6 +397,7 @@ export type Database = {
       }
       top_scorers: {
         Row: {
+          assists: number | null
           goals: number | null
           photo_url: string | null
           player_id: string | null
