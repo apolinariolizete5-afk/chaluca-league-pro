@@ -45,9 +45,37 @@ function AdminResults() {
   );
 }
 
+const EVENT_LABEL: Record<string, string> = {
+  goal: "Golo",
+  assist: "Assistência",
+  yellow: "Amarelo",
+  red: "Vermelho",
+};
+
+type MatchEvent = {
+  id: string;
+  player_id: string | null;
+  type: string;
+  minute: number | null;
+};
+
 function ResultCard({ match, label }: { match: Match; label: string }) {
   const qc = useQueryClient();
   const { data: players } = useQuery(playersQuery);
+  const { data: events } = useQuery({
+    queryKey: ["events", match.id],
+    queryFn: async (): Promise<MatchEvent[]> => {
+      const { data, error } = await supabase
+        .from("match_events")
+        .select("id,player_id,type,minute")
+        .eq("match_id", match.id)
+        .order("minute", { ascending: true });
+      if (error) throw error;
+      return (data ?? []) as MatchEvent[];
+    },
+  });
+  const playerName = (id: string | null) =>
+    (players ?? []).find((p) => p.id === id)?.name ?? "—";
   const [home, setHome] = useState(match.home_score?.toString() ?? "");
   const [away, setAway] = useState(match.away_score?.toString() ?? "");
   const [scorer, setScorer] = useState("");
