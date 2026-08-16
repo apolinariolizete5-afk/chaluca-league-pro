@@ -51,7 +51,7 @@ function ResultCard({ match, label }: { match: Match; label: string }) {
   const [home, setHome] = useState(match.home_score?.toString() ?? "");
   const [away, setAway] = useState(match.away_score?.toString() ?? "");
   const [scorer, setScorer] = useState("");
-  const [eventType, setEventType] = useState<"goal" | "yellow" | "red">("goal");
+  const [eventType, setEventType] = useState<"goal" | "assist" | "yellow" | "red">("goal");
   const [minute, setMinute] = useState("");
   const [busy, setBusy] = useState(false);
 
@@ -98,6 +98,19 @@ function ResultCard({ match, label }: { match: Match; label: string }) {
     refresh();
   }
 
+  async function syncScoreFromGoals() {
+    const { data } = await supabase
+      .from("match_events")
+      .select("team_id,type")
+      .eq("match_id", match.id)
+      .eq("type", "goal");
+    const h = (data ?? []).filter((e) => e.team_id === match.home_team_id).length;
+    const a = (data ?? []).filter((e) => e.team_id === match.away_team_id).length;
+    await supabase.from("matches").update({ home_score: h, away_score: a }).eq("id", match.id);
+    setHome(String(h));
+    setAway(String(a));
+  }
+
   async function addEvent() {
     const player = squad.find((p) => p.id === scorer);
     if (!player) {
@@ -117,7 +130,21 @@ function ResultCard({ match, label }: { match: Match; label: string }) {
     }
     setScorer("");
     setMinute("");
+    if (eventType === "goal") await syncScoreFromGoals();
     toast.success("Lance registado");
+    void qc.invalidateQueries({ queryKey: ["events", match.id] });
+    refresh();
+  }
+
+  async function removeEvent(id: string, type: string) {
+    const { error } = await supabase.from("match_events").delete().eq("id", id);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
+    if (type === "goal") await syncScoreFromGoals();
+    toast.success("Lance removido");
+    void qc.invalidateQueries({ queryKey: ["events", match.id] });
     refresh();
   }
 
