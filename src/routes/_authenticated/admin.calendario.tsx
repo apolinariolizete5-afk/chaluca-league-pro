@@ -67,8 +67,31 @@ function AdminCalendar() {
     refresh();
   }
 
+  async function generate(e: React.FormEvent) {
+    e.preventDefault();
+    const ids = (teams ?? []).map((t) => t.id);
+    if (ids.length < 2) {
+      toast.error("Precisa de pelo menos 2 equipas");
+      return;
+    }
+    const rows = generateRoundRobin(ids, new Date(genStart).toISOString(), Number(genGap) || 7, genVenue || null);
+    if (!rows.length) return;
+    if (!confirm(`Criar ${rows.length} jogos em ${ids.length - (ids.length % 2 === 1 ? 0 : 1)} jornadas?`))
+      return;
+    setBusy(true);
+    const { error } = await supabase.from("matches").insert(rows);
+    setBusy(false);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
+    toast.success(`${rows.length} jogos criados`);
+    refresh();
+  }
+
   return (
     <div className="grid gap-8 lg:grid-cols-[340px_1fr]">
+      <div className="space-y-6">
       <section className="card-elevated h-fit p-5">
         <h2 className="text-xl">Marcar jogo</h2>
         <form className="mt-4 space-y-3" onSubmit={create}>
