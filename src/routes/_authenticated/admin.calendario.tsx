@@ -28,6 +28,10 @@ function AdminCalendar() {
   const [kickoff, setKickoff] = useState("");
   const [venue, setVenue] = useState("");
   const [round, setRound] = useState("");
+  const [genStart, setGenStart] = useState("");
+  const [genGap, setGenGap] = useState("7");
+  const [genVenue, setGenVenue] = useState("");
+  const [busy, setBusy] = useState(false);
 
   const refresh = () => {
     void qc.invalidateQueries({ queryKey: ["matches"] });
