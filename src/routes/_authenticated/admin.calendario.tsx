@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { Trash2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { formatDateTime, isPlayed, matchesQuery, teamName, teamsQuery } from "@/lib/queries";
+import { generateRoundRobin } from "@/lib/schedule";
 
 export const Route = createFileRoute("/_authenticated/admin/calendario")({
   head: () => ({
