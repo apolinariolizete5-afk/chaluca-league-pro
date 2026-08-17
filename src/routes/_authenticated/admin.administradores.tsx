@@ -18,7 +18,7 @@ export const Route = createFileRoute("/_authenticated/admin/administradores")({
       { property: "og:description", content: "Convites por email e lista de administradores." },
     ],
   }),
-  component: AdminInvites;
+  component: AdminInvites,
 });
 
 type Invite = {
