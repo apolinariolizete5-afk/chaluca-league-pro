@@ -49,9 +49,16 @@ function InvitePage() {
       return;
     }
     setBusy(true);
-    let { error } = await supabase.auth.signUp({ email, password });
-    if (error && /already/i.test(error.message)) {
-      ({ error } = await supabase.auth.signInWithPassword({ email, password }));
+    const { data: current } = await supabase.auth.getSession();
+    let error: { message: string } | null = null;
+    if (current.session) {
+      // O convidado chegou já autenticado pelo link do email: só define a palavra-passe.
+      ({ error } = await supabase.auth.updateUser({ password }));
+    } else {
+      ({ error } = await supabase.auth.signUp({ email, password }));
+      if (error && /already/i.test(error.message)) {
+        ({ error } = await supabase.auth.signInWithPassword({ email, password }));
+      }
     }
     if (error) {
       setBusy(false);
