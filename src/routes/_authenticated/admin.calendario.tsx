@@ -215,7 +215,11 @@ function AdminCalendar() {
                 isPlayed(m) ? "bg-primary text-primary-foreground" : "bg-secondary"
               }`}
             >
-              {isPlayed(m) ? `${m.home_score}-${m.away_score}` : "Por jogar"}
+              {isPlayed(m)
+                ? `${m.home_score}-${m.away_score}`
+                : new Date(m.kickoff).getTime() < Date.now()
+                  ? "Aguarda resultado"
+                  : "Agendado"}
             </span>
             <button
               type="button"
