@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { Trash2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { formatDateTime, isPlayed, matchesQuery, teamName, teamsQuery } from "@/lib/queries";
+import { generateRoundRobin } from "@/lib/schedule";
 
 export const Route = createFileRoute("/_authenticated/admin/calendario")({
   head: () => ({
@@ -27,6 +28,10 @@ function AdminCalendar() {
   const [kickoff, setKickoff] = useState("");
   const [venue, setVenue] = useState("");
   const [round, setRound] = useState("");
+  const [genStart, setGenStart] = useState("");
+  const [genGap, setGenGap] = useState("7");
+  const [genVenue, setGenVenue] = useState("");
+  const [busy, setBusy] = useState(false);
 
   const refresh = () => {
     void qc.invalidateQueries({ queryKey: ["matches"] });
@@ -67,8 +72,31 @@ function AdminCalendar() {
     refresh();
   }
 
+  async function generate(e: React.FormEvent) {
+    e.preventDefault();
+    const ids = (teams ?? []).map((t) => t.id);
+    if (ids.length < 2) {
+      toast.error("Precisa de pelo menos 2 equipas");
+      return;
+    }
+    const rows = generateRoundRobin(ids, new Date(genStart).toISOString(), Number(genGap) || 7, genVenue || null);
+    if (!rows.length) return;
+    if (!confirm(`Criar ${rows.length} jogos em ${ids.length - (ids.length % 2 === 1 ? 0 : 1)} jornadas?`))
+      return;
+    setBusy(true);
+    const { error } = await supabase.from("matches").insert(rows);
+    setBusy(false);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
+    toast.success(`${rows.length} jogos criados`);
+    refresh();
+  }
+
   return (
     <div className="grid gap-8 lg:grid-cols-[340px_1fr]">
+      <div className="space-y-6">
       <section className="card-elevated h-fit p-5">
         <h2 className="text-xl">Marcar jogo</h2>
         <form className="mt-4 space-y-3" onSubmit={create}>
@@ -127,6 +155,45 @@ function AdminCalendar() {
         </form>
       </section>
 
+      <section className="card-elevated h-fit p-5">
+        <h2 className="text-xl">Gerar todas as jornadas</h2>
+        <p className="mt-2 text-sm text-muted-foreground">
+          Cria automaticamente todos contra todos, uma jornada de cada vez.
+        </p>
+        <form className="mt-4 space-y-3" onSubmit={generate}>
+          <input
+            required
+            type="datetime-local"
+            value={genStart}
+            onChange={(e) => setGenStart(e.target.value)}
+            className="field-input"
+          />
+          <input
+            type="number"
+            min={1}
+            placeholder="Dias entre jornadas"
+            value={genGap}
+            onChange={(e) => setGenGap(e.target.value)}
+            className="field-input"
+          />
+          <input
+            placeholder="Local (opcional)"
+            value={genVenue}
+            onChange={(e) => setGenVenue(e.target.value)}
+            className="field-input"
+          />
+          <button
+            type="submit"
+            disabled={busy}
+            className="w-full rounded-md border border-primary px-4 py-2.5 text-sm font-semibold text-primary disabled:opacity-60"
+          >
+            {busy ? "A gerar…" : "Gerar calendário completo"}
+          </button>
+        </form>
+      </section>
+      </div>
+
+
       <section className="space-y-3">
         {(matches ?? []).length === 0 && (
           <p className="text-sm text-muted-foreground">Sem jogos marcados.</p>
@@ -148,7 +215,11 @@ function AdminCalendar() {
                 isPlayed(m) ? "bg-primary text-primary-foreground" : "bg-secondary"
               }`}
             >
-              {isPlayed(m) ? `${m.home_score}-${m.away_score}` : "Por jogar"}
+              {isPlayed(m)
+                ? `${m.home_score}-${m.away_score}`
+                : new Date(m.kickoff).getTime() < Date.now()
+                  ? "Aguarda resultado"
+                  : "Agendado"}
             </span>
             <button
               type="button"
