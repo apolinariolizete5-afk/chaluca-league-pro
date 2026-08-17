@@ -150,6 +150,45 @@ function AdminCalendar() {
         </form>
       </section>
 
+      <section className="card-elevated h-fit p-5">
+        <h2 className="text-xl">Gerar todas as jornadas</h2>
+        <p className="mt-2 text-sm text-muted-foreground">
+          Cria automaticamente todos contra todos, uma jornada de cada vez.
+        </p>
+        <form className="mt-4 space-y-3" onSubmit={generate}>
+          <input
+            required
+            type="datetime-local"
+            value={genStart}
+            onChange={(e) => setGenStart(e.target.value)}
+            className="field-input"
+          />
+          <input
+            type="number"
+            min={1}
+            placeholder="Dias entre jornadas"
+            value={genGap}
+            onChange={(e) => setGenGap(e.target.value)}
+            className="field-input"
+          />
+          <input
+            placeholder="Local (opcional)"
+            value={genVenue}
+            onChange={(e) => setGenVenue(e.target.value)}
+            className="field-input"
+          />
+          <button
+            type="submit"
+            disabled={busy}
+            className="w-full rounded-md border border-primary px-4 py-2.5 text-sm font-semibold text-primary disabled:opacity-60"
+          >
+            {busy ? "A gerar…" : "Gerar calendário completo"}
+          </button>
+        </form>
+      </section>
+      </div>
+
+
       <section className="space-y-3">
         {(matches ?? []).length === 0 && (
           <p className="text-sm text-muted-foreground">Sem jogos marcados.</p>
